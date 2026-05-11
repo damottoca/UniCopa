@@ -2,15 +2,18 @@ import { StyleSheet, Text, View, Image, ImageBackground } from "react-native";
 import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
 import { SectionList } from "react-native";
+import { useState } from "react";
 
 export default function App() {
 
   const jogos = dados.jogos;
 
-  // data de hoje no mesmo formato do seu JSON (pt-BR)
+  const [favoritos, setFavoritos] = useState([]);
+
+  
   const hoje = new Date().toLocaleDateString("pt-BR");
 
-  // agrupa por data
+ 
   const agruparPorData = (jogos) => {
 
     const agrupados = jogos.reduce((acc, jogo) => {
@@ -27,7 +30,7 @@ export default function App() {
 
     }, {});
 
-    // ordena por hora dentro de cada dia
+    
     Object.keys(agrupados).forEach((data) => {
 
       agrupados[data].sort((a, b) => {

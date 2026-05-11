@@ -1,70 +1,65 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import teams from "../assets/teams";
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, favoritos, onToggleFavorito }) {
 
   const logoCasa = teams[game.sigla_casa];
   const logoFora = teams[game.sigla_fora];
+
+  const isFavorito = favoritos?.some((j) => j.id === game.id);
+
   const isBrasil =
-    game.sigla_casa === "BRA" || game.sigla_fora === "BRA"; 
+    game.sigla_casa === "BRA" ||
+    game.sigla_fora === "BRA";
 
   return (
- <View
-  style={[
-    styles.jogo,
-    isBrasil && styles.jogoBrasil
-  ]}
->
+    <TouchableOpacity
+      onPress={() => onToggleFavorito(game)}
+      activeOpacity={0.8}
+    >
+      <View style={[
+        styles.jogo,
+        isBrasil && styles.jogoBrasil,
+        isFavorito && styles.jogoFavorito
+      ]}>
 
-      <Text style={styles.grupo}>
-        GRUPO {game.grupo} • {game.confronto}
-      </Text>
+        {/* estrela */}
+        <Text style={styles.star}>
+          {isFavorito ? "⭐" : "☆"}
+        </Text>
 
-      <View style={styles.linhaPrincipal}>
+        <Text style={styles.grupo}>
+          GRUPO {game.grupo} • {game.confronto}
+        </Text>
 
-        <View style={styles.time}>
-          <Image
-            style={styles.bandeira}
-            source={logoCasa}
-          />
+        <View style={styles.linhaPrincipal}>
 
-          <Text style={styles.sigla}>
-            {game.sigla_casa}
-          </Text>
+          <View style={styles.time}>
+            <Image style={styles.bandeira} source={logoCasa} />
+            <Text style={styles.sigla}>{game.sigla_casa}</Text>
+          </View>
+
+          <View style={styles.horario}>
+            <Text style={styles.hora}>{game.hora_brasilia}</Text>
+            <Text style={styles.subTitulo}>VS</Text>
+          </View>
+
+          <View style={styles.time}>
+            <Text style={styles.sigla}>{game.sigla_fora}</Text>
+            <Image style={styles.bandeira} source={logoFora} />
+          </View>
+
         </View>
 
-        <View style={styles.horario}>
-          <Text style={styles.hora}>
-            {game.hora_brasilia}
+        <View style={styles.local}>
+          <Text style={styles.subTitulo}>{game.estadio}</Text>
+          <Text style={styles.subTitulo}>
+            {game.cidade} • {game.pais}
           </Text>
-
-          <Text style={styles.subTitulo}>VS</Text>
-        </View>
-
-        <View style={styles.time}>
-          <Text style={styles.sigla}>
-            {game.sigla_fora}
-          </Text>
-
-          <Image
-            style={styles.bandeira}
-            source={logoFora}
-          />
         </View>
 
       </View>
-
-      <View style={styles.local}>
-        <Text style={styles.subTitulo}>
-          {game.estadio}
-        </Text>
-
-        <Text style={styles.subTitulo}>
-          {game.cidade} • {game.pais}
-        </Text>
-      </View>
-
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -134,4 +129,17 @@ const styles = StyleSheet.create({
     color: "#8fa3b8",
     fontSize: 12,
   },
+
+  jogoFavorito: {
+  borderWidth: 40,
+  borderColor: "#ffcc00",
+},
+
+star: {
+  position: "absolute",
+  right: 80,
+  top: 10,
+  color: "#ffcc00",
+  fontSize: 25
+},
 });
