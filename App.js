@@ -2,24 +2,46 @@ import { StyleSheet, Text, View, Image, ImageBackground } from "react-native";
 import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
 import { SectionList } from "react-native-web";
+import teams from "./assets/teams";
 
 export default function App() {
   const jogos = dados.jogos;
 
-  const agruparPorData = (jogos) => {
-    return jogos.reduce((acc, jogo) => {
-      const data = jogo.data_brasilia;
+const agruparPorData = (jogos) => {
 
-      if (!acc[data]) {
-        acc[data] = [];
-      }
+  const agrupados = jogos.reduce((acc, jogo) => {
 
-      acc[data].push(jogo);
+    const data = jogo.data_brasilia;
 
-      return acc;
-    }, {});
-  };
+    if (!acc[data]) {
+      acc[data] = [];
+    }
 
+    acc[data].push(jogo);
+
+    return acc;
+
+  }, {});
+
+  // ordena os jogos por horário
+  Object.keys(agrupados).forEach((data) => {
+
+    agrupados[data].sort((a, b) => {
+
+      const [horaA, minutoA] = a.hora_brasilia.split(":");
+      const [horaB, minutoB] = b.hora_brasilia.split(":");
+
+      const totalA = Number(horaA) * 60 + Number(minutoA);
+      const totalB = Number(horaB) * 60 + Number(minutoB);
+
+      return totalA - totalB;
+
+    });
+
+  });
+
+  return agrupados;
+};
   const jogosAgrupados = agruparPorData(jogos);
 
   const jogosTratados = Object.keys(jogosAgrupados).map((data) => {
@@ -29,6 +51,8 @@ export default function App() {
     };
   });
 
+  const hoje = new Date().toLocaleDateString("pt-BR");
+  
   return (
     <ImageBackground
       style={styles.container}

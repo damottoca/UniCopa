@@ -44,7 +44,7 @@ const teams = {
   ENG: require("../assets/jogos/england.png"),
   CRO: require("../assets/jogos/croatia.png"),
   POR: require("../assets/jogos/portugal.png"),
-  UZB: require("../assets/jogos/uzbekistán.png"),
+  UZB: require("../assets/jogos/uzbekistan.png"),
   COL: require("../assets/jogos/colombia.png"),
 };
 
